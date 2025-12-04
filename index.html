@@ -6,10 +6,10 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
-    <title>森森天氣</title>
-    <link rel="icon" type="image/png" href="./icon-v2.png" />
-    <link rel="apple-touch-icon" href="./icon-v2.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="./icon-v2.png" />
+    <title>呆呆獸天氣</title>
+    <link rel="icon" type="image/png" href="./slowpoke-icon.png" />
+    <link rel="apple-touch-icon" href="./slowpoke-icon.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./slowpoke-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -19,16 +19,24 @@
 
     <style>
       :root {
-        --ac-green: #7de1a9;
-        --ac-bg-pattern: #8fd8af;
-        --ac-cream: #fffef2;
-        --ac-yellow: #f9f195;
-        --ac-brown: #796452;
-        --ac-blue: #4fb5d9;
-        --ac-dark: #58504a;
-        --ac-card-border: #e6e0c8;
+        /* 呆呆獸棲息地配色：粉嫩、大地、木頭、水藍 (已調整為更像木頭的色系) */
+        --sp-pink-light: #ffddeb; /* 粉紅 (呆呆獸體色) */
+        --sp-pink: #f8b4d8; /* 稍深粉紅 */
+        --sp-green-grass: #95c18c; /* 草地綠 (背景) */
+        /* ⬇️ 調整：木板厚度/深色邊框 (更濃郁，增強對比) */
+        --sp-brown-wood: #6b4f40;
+        /* ⬇️ 調整：木板表面底色 (更溫暖可愛) */
+        --sp-brown-light: #d2b48c;
+        --sp-cream-board: #f4f2f0; /* 木板底色 (稍微偏灰白) */
+        --sp-blue-water: #b7eeff; /* 水藍色 */
+        --sp-dark: #634f40; /* 深色文字 */
+        --sp-card-border: #d0c2b2;
+        --sp-wood-highlight: #ffecc7; /* 新增一個立體高光色 (釘子主體色) */
+        /* 【新增】深一點的水藍色，用於預報文字 */
+        --sp-blue-dark: #407b94;
       }
 
+      /* 通用樣式保持不變 */
       * {
         margin: 0;
         padding: 0;
@@ -36,20 +44,19 @@
         -webkit-tap-highlight-color: transparent;
       }
 
+      /* === 1. 整體視覺：呆呆獸棲息地 === */
       body {
         font-family: "Zen Maru Gothic", sans-serif;
-        background-color: var(--ac-green);
-        /* 更細緻的斜紋背景 */
-        background-image: repeating-linear-gradient(
-          45deg,
-          transparent,
-          transparent 20px,
-          rgba(255, 255, 255, 0.2) 20px,
-          rgba(255, 255, 255, 0.2) 40px
-        );
+        background-color: var(--sp-green-grass); /* 綠色草地 */
+
+        /* === 【背景圖片上傳區】 === */
+        /* 如果您要使用圖片，請解除註釋下方兩行，並替換 URL */
+        background-image: url(image/bg.png);
+        background-size: cover;
+        background-repeat: no-repeat;
+
         min-height: 100vh;
-        color: var(--ac-dark);
-        /* 防止 iOS 左右滑動 */
+        color: var(--sp-dark);
         overflow-x: hidden;
         padding-bottom: 20px;
       }
@@ -60,155 +67,232 @@
         justify-content: space-between;
         align-items: center;
         padding: 15px 20px;
-        background: rgba(255, 255, 255, 0.3);
-        backdrop-filter: blur(10px);
+        background: rgba(255, 255, 255, 0.5); /* 淺色半透明 */
+        backdrop-filter: blur(5px);
         position: sticky;
         top: 0;
         z-index: 100;
+        border-bottom-left-radius: 15px;
+        border-bottom-right-radius: 15px;
       }
 
       .location-pill {
-        background: var(--ac-yellow);
-        color: var(--ac-brown);
+        /* 木頭招牌標籤 */
+        background: var(--sp-brown-wood);
+        color: var(--sp-cream-board);
         padding: 5px 15px;
         border-radius: 20px;
         font-weight: 900;
         font-size: 1.1rem;
-        transform: rotate(-2deg);
+        transform: rotate(-3deg);
         border: 2px solid white;
-        box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
+        box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.15);
       }
 
       .update-pill {
         font-size: 0.8rem;
-        color: white;
-        background: rgba(0, 0, 0, 0.2);
+        color: var(--sp-dark);
+        background: var(--sp-pink-light);
         padding: 4px 10px;
         border-radius: 12px;
+        font-weight: bold;
       }
 
       .container {
         padding: 20px;
         max-width: 600px;
-        /* 限制在大手機寬度 */
         margin: 0 auto;
       }
 
-      /* === 核心：今日焦點卡片 === */
+      /* === 2. 核心：更像木頭看板卡片 (已增強立體感與可愛度) === */
       .hero-card {
-        background: var(--ac-cream);
-        border-radius: 35px;
+        background-color: var(--sp-brown-light); /* 淺木頭底色 */
+        border-radius: 25px; /* 略加大圓角，更可愛 */
         padding: 30px 25px;
         text-align: center;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        border: 4px solid white;
-        margin-bottom: 25px;
         position: relative;
+        margin-bottom: 40px;
+        /* 增添生動感：微微傾斜 */
+        transform: rotate(-1.5deg);
+
+        /* 關鍵立體感調整 */
+        box-shadow: inset 0 10px 10px rgba(255, 255, 255, 0.4),
+          /* 頂部高光 */ 0 15px 0 0 var(--sp-brown-wood),
+          /* 底部厚度 */ 0 20px 30px rgba(0, 0, 0, 0.4); /* 浮動陰影 (加大) */
+
+        /* 邊框：使用較厚的雙層邊框 */
+        border: 8px solid var(--sp-brown-wood);
+
+        /* 垂直的木紋紋理 (Wood Grain) */
+        background-image:
+            /* 深色線條紋理 (更稀疏) */ repeating-linear-gradient(
+            0deg,
+            var(--sp-brown-light),
+            var(--sp-brown-light) 6px,
+            rgba(107, 79, 64, 0.15) 6px,
+            rgba(107, 79, 64, 0.15) 7px
+          ),
+          /* 淺色線條紋理 (高光) */
+            repeating-linear-gradient(
+              0deg,
+              transparent,
+              transparent 20px,
+              rgba(255, 255, 255, 0.3) 20px,
+              rgba(255, 255, 255, 0.3) 21px
+            );
+        background-size: 100% 100%;
       }
 
-      /* 像動森的對話氣泡 */
+      /* 增加四個角釘子/螺絲 (立體可愛的裝飾) - 這裡只實作了頂部兩角 */
+      .hero-card::before,
+      .hero-card::after {
+        content: "";
+        position: absolute;
+        width: 15px;
+        height: 15px;
+        background: var(--sp-wood-highlight); /* 淺色作為釘子主體 */
+        border: 3px solid var(--sp-brown-wood);
+        border-radius: 50%;
+        z-index: 10;
+        box-shadow: 0 2px 0 var(--sp-brown-wood); /* 立體陰影 */
+      }
+
+      /* 左上與右上 */
+      .hero-card::before {
+        top: -8px;
+        left: -8px;
+      }
+      .hero-card::after {
+        top: -8px;
+        right: -8px;
+      }
+
+      /* 【修正點 1】對話氣泡樣式 */
       .hero-period {
         position: absolute;
-        top: -15px;
+        top: -10px;
         left: 50%;
-        transform: translateX(-50%);
-        background: var(--ac-blue);
+        /* 1-1. 套用與木板相同的傾斜角度 */
+        transform: translateX(-50%) rotate(-1.5deg);
+
+        background: #6b4f40; /* 粉紅色氣泡 */
         color: white;
-        padding: 5px 20px;
-        border-radius: 20px;
-        font-weight: bold;
-        border: 3px solid white;
-        box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
+        padding: 8px 25px;
+        /* 1-2. 移除尖角，改為四個圓角 */
+        border-radius: 30px;
+
+        font-weight: 900;
+        /* 1-3. 邊框改為咖啡色 */
+        border: 4px solid var(--sp-brown-wood);
+        box-shadow: 2px 2px 0 var(--sp-brown-wood);
+        font-size: 1.1rem;
+        outline: 8px solid #6b4f40; /* 增加白色描邊，更像卡通貼紙 */
+        outline-offset: -4px;
       }
 
       .hero-temp-container {
         display: flex;
         justify-content: center;
         align-items: center;
-        gap: 10px;
-        margin: 15px 0;
+        gap: 15px;
+        margin: 25px 0 15px 0;
       }
 
       .hero-icon {
-        font-size: 5rem;
+        font-size: 6rem; /* 放大 Icon */
         filter: drop-shadow(0 4px 0 rgba(0, 0, 0, 0.1));
-        animation: bounce 3s infinite;
+        animation: float 4s infinite ease-in-out; /* 漂浮動畫 */
       }
 
-      @keyframes bounce {
-        0%,
-        100% {
+      /* 漂浮動畫 */
+      @keyframes float {
+        0% {
           transform: translateY(0);
         }
-
         50% {
-          transform: translateY(-10px);
+          transform: translateY(-8px);
+        }
+        100% {
+          transform: translateY(0);
         }
       }
 
       .hero-temp {
-        font-size: 4.5rem;
+        font-size: 6rem; /* 放大溫度 */
         font-weight: 900;
-        color: var(--ac-brown);
+        color: var(--sp-brown-wood);
         line-height: 1;
+        /* 讓字有可愛的描邊感 */
+        text-shadow: 2px 2px 0 var(--sp-cream-board),
+          -1px -1px 0 var(--sp-cream-board);
       }
 
       .hero-desc {
-        font-size: 1.5rem;
-        color: #8a7b70;
+        font-size: 1.6rem;
+        color: var(--sp-dark);
         margin-bottom: 20px;
-        font-weight: bold;
+        font-weight: 900;
+        letter-spacing: 2px;
       }
 
-      /* === 上班族最愛的：快速建議區 === */
+      /* === 建議區：改為呆呆獸牌子 (保持原樣，但因應新色系更好看) === */
       .advice-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 15px;
-        margin-top: 20px;
-        padding-top: 20px;
-        border-top: 2px dashed #e0d8c0;
+        gap: 10px;
+        margin-top: 25px;
+        padding-top: 15px;
+        border-top: 2px dashed var(--sp-card-border);
       }
 
       .advice-item {
         display: flex;
         flex-direction: column;
         align-items: center;
-        background: rgba(255, 255, 255, 0.5);
-        padding: 10px;
+        /* 像小木牌的背景 */
+        background: var(--sp-pink-light);
+        padding: 15px 10px;
         border-radius: 20px;
+        border: 3px solid var(--sp-pink);
+        box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
       }
 
       .advice-icon {
-        font-size: 2rem;
+        font-size: 2.2rem;
         margin-bottom: 5px;
       }
 
       .advice-text {
-        font-size: 1.4rem;
+        font-size: 1.5rem;
         font-weight: 900;
-        color: var(--ac-brown);
+        color: var(--sp-dark);
         margin: 5px 0;
         line-height: 1.2;
       }
 
-      /* === 稍後預報：橫向滑動區 === */
+      /* === 稍後預報：可愛小卡 === */
       .section-title {
-        font-size: 1.2rem;
-        color: white;
+        font-size: 1.4rem;
+        color: var(--sp-brown-wood);
         margin-bottom: 15px;
         margin-left: 10px;
         font-weight: 900;
-        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.1);
+        text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.5); /* 白色陰影 */
+        background: var(--sp-pink-light);
+        border-radius: 25px;
+        padding: 8px 20px;
+        border: 4px solid var(--sp-pink);
+        box-shadow: 2px 4px 0 rgba(0, 0, 0, 0.15); /* 底部陰影 */
+        text-align: center; /* 文字居中 */
       }
 
       .scroll-container {
         display: flex;
+        flex-wrap: wrap;
         overflow-x: auto;
         gap: 15px;
         padding-bottom: 10px;
-        /* 隱藏滾動條但保留功能 */
-        scrollbar-width: none;
+        scroll-width: none;
         -ms-overflow-style: none;
       }
 
@@ -217,36 +301,54 @@
       }
 
       .mini-card {
-        min-width: 140px;
-        background: rgba(255, 255, 255, 0.85);
+        flex-grow: 1;
+        flex-basis: 0;
+        min-width: 130px;
+        background: var(--sp-blue-water); /* 像水塘的藍色 */
         border-radius: 25px;
         padding: 20px 15px;
         text-align: center;
-        border: 3px solid white;
+        border: 6px solid white;
         flex-shrink: 0;
-        /* 防止被擠壓 */
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        transform: rotate(0.5deg); /* 微微傾斜，增添童趣 */
       }
 
       .mini-time {
-        background: var(--ac-green);
+        background: var(--sp-pink);
+        border: 4px solid #ffffff;
         color: white;
-        padding: 3px 10px;
-        border-radius: 10px;
-        font-size: 0.8rem;
+        padding: 5px 12px;
+        border-radius: 15px;
+        font-size: 1.2rem;
+        letter-spacing: 0.1rem;
         display: inline-block;
         margin-bottom: 10px;
-        font-weight: bold;
+        font-weight: 900;
       }
 
       .mini-icon {
-        font-size: 2.5rem;
+        /* 【修正點 2-1】預報區圖示顏色：維持原色或用深色，這裡先維持預設 */
+        font-size: 4rem;
         margin: 5px 0;
+        color: var(--sp-dark); /* 確保圖標為深色 */
       }
 
       .mini-temp {
-        font-size: 1.2rem;
-        font-weight: 800;
-        color: var(--ac-dark);
+        font-size: 1.5rem;
+        font-weight: 900;
+        /* 【修正點 2-2】預報區溫度用深藍色 */
+        color: var(--sp-blue-dark);
+      }
+
+      /* 【修正點 2-3】預報區降雨率用深藍色 */
+      .mini-card div:last-child {
+        font-size: 1rem;
+        margin-top: 5px;
+        font-weight: bold;
+        color: var(
+          --sp-blue-dark
+        ) !important; /* 使用 !important 覆寫內聯樣式 */
       }
 
       /* Loading 畫面 */
@@ -256,7 +358,7 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: var(--ac-green);
+        background: var(--sp-pink); /* 呆呆獸的粉紅色 */
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -268,52 +370,54 @@
 
   <body>
     <div id="loading" class="loading-screen">
-      <div style="font-size: 4rem; animation: bounce 2s infinite">☁️</div>
+      <div style="font-size: 4rem; animation: float 2.5s infinite">🌸</div>
       <p style="color: white; font-weight: bold; margin-top: 20px">
-        正在觀測雲的流動...
+        呆呆獸正在努力思考今天的雲怎麼跑...
       </p>
     </div>
     <div class="status-bar">
-      <div class="location-pill">📍 臺北</div>
+      <div class="location-pill">🍥 臺北 - 呆呆獸棲息地</div>
       <div id="updateTime" class="update-pill">更新中...</div>
     </div>
 
     <div class="container" id="mainContent" style="display: none">
       <div id="heroCard"></div>
 
-      <h3 class="section-title">稍後預報</h3>
+      <h3 class="section-title">✨ 呆呆獸的下一步計畫 (稍後預報) ✨</h3>
       <div class="scroll-container" id="futureForecasts"></div>
     </div>
 
     <script>
       const API_URL = "https://weather-cute.zeabur.app/api/weather/kaohsiung";
 
+      // 替換 Icon 樣式，這裡使用 Unicode 或 Emoji
       function getWeatherIcon(weather) {
-        if (!weather) return "🌤️";
-        if (weather.includes("晴")) return "☀️";
-        if (weather.includes("多雲")) return "⛅";
-        if (weather.includes("陰")) return "☁️";
-        if (weather.includes("雨")) return "🌧️";
-        if (weather.includes("雷")) return "⛈️";
-        return "🌤️";
+        if (!weather) return "✨";
+        if (weather.includes("晴")) return "🌞"; // 換成更可愛的太陽
+        if (weather.includes("多雲")) return "☁️";
+        if (weather.includes("陰")) return "🌫️";
+        if (weather.includes("雨")) return "💧"; // 簡化為水滴
+        if (weather.includes("雷")) return "⚡"; // 閃電
+        return "❓";
       }
 
+      // === 3. 呆呆獸專屬建議文案修改 ===
       function getAdvice(rainProb, maxTemp) {
-        let rainIcon = "🌂";
-        let rainText = "不用帶傘";
+        let rainIcon = "🌸";
+        let rainText = "今天沒雨呀";
         if (parseInt(rainProb) > 30) {
-          rainIcon = "☂️";
-          rainText = "記得帶傘！";
+          rainIcon = "☔";
+          rainText = "記得帶呆呆傘";
         }
 
-        let clothIcon = "👕";
-        let clothText = "舒適穿搭";
+        let clothIcon = "👒";
+        let clothText = "隨心所欲地穿吧";
         if (parseInt(maxTemp) >= 28) {
-          clothIcon = "🎽";
-          clothText = "短袖出發";
+          clothIcon = "🩱";
+          clothText = "去水邊玩！很熱喔"; // 泳衣圖案
         } else if (parseInt(maxTemp) <= 20) {
-          clothIcon = "🧥";
-          clothText = "加件外套";
+          clothIcon = "🧣";
+          clothText = "有點涼，穿暖一點";
         }
 
         return { rainIcon, rainText, clothIcon, clothText };
@@ -321,11 +425,11 @@
 
       function getTimePeriod(startTime) {
         const hour = new Date(startTime).getHours();
-        if (hour >= 5 && hour < 11) return "早晨";
-        if (hour >= 11 && hour < 14) return "中午";
-        if (hour >= 14 && hour < 18) return "下午";
-        if (hour >= 18 && hour < 23) return "晚上";
-        return "深夜";
+        if (hour >= 5 && hour < 11) return "早餐時間！";
+        if (hour >= 11 && hour < 14) return "午餐時間";
+        if (hour >= 14 && hour < 18) return "下午茶時間";
+        if (hour >= 18 && hour < 23) return "晚餐時間";
+        return "安靜的夜晚";
       }
 
       function renderWeather(data) {
@@ -340,43 +444,36 @@
           (parseInt(current.maxTemp) + parseInt(current.minTemp)) / 2
         );
 
+        // 為了在 CSS 中實現底部釘子，我們在 card 元素上添加 data 屬性
         document.getElementById("heroCard").innerHTML = `
-                        <div class="hero-card">
-                            <div class="hero-period">${period}</div>
-                            <div class="hero-temp-container">
-                                <div class="hero-icon">${getWeatherIcon(
-                                  current.weather
-                                )}</div>
-                                <div class="hero-temp">${avgTemp}°</div>
-                            </div>
-                            <div class="hero-desc">${current.weather}</div>
-                            
-                            <div class="advice-grid">
-                                <div class="advice-item">
-                                    <div class="advice-icon">${
-                                      advice.rainIcon
-                                    }</div>
-                                    <div class="advice-text">${
-                                      advice.rainText
-                                    }</div>
-                                    <div style="font-size:0.7rem; color:#999">降雨率 ${
-                                      current.rain
-                                    }</div>
-                                </div>
-                                <div class="advice-item">
-                                    <div class="advice-icon">${
-                                      advice.clothIcon
-                                    }</div>
-                                    <div class="advice-text">${
-                                      advice.clothText
-                                    }</div>
-                                    <div style="font-size:0.7rem; color:#999">最高溫 ${
-                                      current.maxTemp
-                                    }°</div>
-                                </div>
-                            </div>
-                        </div>
-                    `;
+						<div class="hero-card wood-stakes" data-bottom-left="true" data-bottom-right="true">
+							<div class="hero-period">${period}的天氣！</div>
+							<div class="hero-temp-container">
+								<div class="hero-icon">${getWeatherIcon(current.weather)}</div>
+								<div class="hero-temp">${avgTemp}°</div>
+							</div>
+							<div class="hero-desc">現在：${current.weather}</div>
+							
+							<div class="advice-grid">
+								<div class="advice-item">
+									<div class="advice-icon">${advice.rainIcon}</div>
+									<div class="advice-text">${advice.rainText}</div>
+									<div style="font-size:1rem; color:${
+                    advice.rainIcon === "☔" ? "#c74949" : "#634f40"
+                  }; font-weight:bold;">${
+          advice.rainIcon === "☔" ? "有雨喔" : "超乾爽"
+        } (${current.rain}%)</div>
+								</div>
+								<div class="advice-item">
+									<div class="advice-icon">${advice.clothIcon}</div>
+									<div class="advice-text">${advice.clothText}</div>
+									<div style="font-size:1rem; color:#634f40; font-weight:bold;">氣溫範圍 ${
+                    current.minTemp
+                  }°~${current.maxTemp}°</div>
+								</div>
+							</div>
+						</div>
+					`;
 
         // 2. 渲染稍後預報 (包含明天判斷)
         const scrollContainer = document.getElementById("futureForecasts");
@@ -391,23 +488,20 @@
           // 判斷該預報的日期是否跟今天不同，不同就是明天
           const fDate = new Date(f.startTime);
           if (fDate.getDate() !== todayDate) {
-            p = "明天" + p;
+            p = "明天的" + p;
           }
 
+          // 注意：這裡的降雨率顏色已經被 CSS 中的 .mini-card div:last-child 覆寫為深藍色
           scrollContainer.innerHTML += `
-                            <div class="mini-card">
-                                <div class="mini-time">${p}</div>
-                                <div class="mini-icon">${getWeatherIcon(
-                                  f.weather
-                                )}</div>
-                                <div class="mini-temp">${f.minTemp}° - ${
-            f.maxTemp
-          }°</div>
-                                <div style="font-size:0.8rem; color:#888; margin-top:5px;">💧${
-                                  f.rain
-                                }</div>
-                            </div>
-                        `;
+							<div class="mini-card">
+								<div class="mini-time">${p}</div>
+								<div class="mini-icon">${getWeatherIcon(f.weather)}</div>
+								<div class="mini-temp">${f.minTemp}° - ${f.maxTemp}°</div>
+								<div style="font-size:1rem; color:#634f40; margin-top:5px; font-weight:bold;">💧降雨率 ${
+                  f.rain
+                }%</div>
+							</div>
+						`;
         });
 
         // 3. 右上角顯示今日日期
@@ -447,7 +541,7 @@
           }
         } catch (e) {
           console.error(e);
-          alert("天氣資料讀取失敗，狸克把網路線咬斷了！");
+          alert("天氣資料讀取失敗，呆呆獸把網路線當成尾巴咬住了！");
         }
       }
 
